@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Earthfile custom manager for version ARGs/ENVs with renovate comments.",
+
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update _version ARGs and ENVs in Earthfile",
+      "managerFilePatterns": ["//^Earthfile$//"],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>[a-z-]+?)(?:\\s+depName=(?<depName>.+?))?\\s+packageName=(?<packageName>.+?)(?:\\s+versioning=(?<versioning>[a-z-]+?))?\\s+(?:ENV|ARG)\\s+.+?(_VERSION|_VER|_version)=(?<currentValue>.+?)(?:\\s|$)"
+      ]
+    }
+  ],
+  "dockerfile": {
+    "managerFilePatterns": ["//Earthfile//"]
+  }
+}
