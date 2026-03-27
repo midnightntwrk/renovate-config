@@ -1,0 +1,71 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Org-wide Renovate preset for midnightntwrk. Supply-chain hardened.",
+
+  "extends": [
+    "config:best-practices",
+    "security:openssf-scorecard",
+    ":semanticCommits"
+  ],
+
+  "dependencyDashboard": true,
+  "labels": ["renovate"],
+
+  "schedule": ["before 7am on Monday"],
+  "timezone": "Europe/London",
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 5,
+  "prCreation": "not-pending",
+
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
+  "constraintsFiltering": "strict",
+
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "minimumReleaseAge": null,
+    "schedule": ["at any time"],
+    "labels": ["renovate", "security"],
+    "prPriority": 10
+  },
+
+  "packageRules": [
+    {
+      "description": "Internal packages: no cooldown, grouped into a single PR",
+      "matchPackagePrefixes": ["@midnight-ntwrk/"],
+      "groupName": "midnight SDK packages",
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "Internal GitHub Actions: no cooldown, grouped",
+      "matchPackagePrefixes": ["midnightntwrk/"],
+      "matchManagers": ["github-actions"],
+      "groupName": "midnight GitHub Actions",
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "Major updates require manual approval via dashboard",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+      "labels": ["renovate", "major"]
+    },
+    {
+      "description": "Cargo: replace range (lock file provides pinning)",
+      "matchManagers": ["cargo"],
+      "rangeStrategy": "replace"
+    },
+    {
+      "description": "Group minor+patch by ecosystem to reduce PR noise",
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "non-major dependencies ({{manager}})",
+      "groupSlug": "non-major-{{manager}}"
+    },
+    {
+      "description": "Lock file maintenance: monthly, no cooldown",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "schedule": ["before 7am on the first day of the month"],
+      "minimumReleaseAge": null
+    }
+  ]
+}
