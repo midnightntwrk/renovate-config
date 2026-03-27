@@ -48,14 +48,14 @@ Replace the contents of `renovate.json` with:
 }
 ```
 
-### Repo with GitHub Packages npm registry (e.g. midnight-wallet, midnight-faucet)
+### Repo with GitHub Packages npm registry
+
+If the repo pulls `@midnight-ntwrk` packages from GitHub Packages, add a `hostRules` entry to point Renovate at the right registry:
 
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>midnightntwrk/renovate-config"],
-  "nix": { "enabled": true },
-  "rebaseWhen": "conflicted",
   "hostRules": [
     {
       "hostType": "npm",

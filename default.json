@@ -33,13 +33,13 @@
   "packageRules": [
     {
       "description": "Internal packages: no cooldown, grouped into a single PR",
-      "matchPackagePrefixes": ["@midnight-ntwrk/"],
+      "matchPackageNames": ["@midnight-ntwrk/**"],
       "groupName": "midnight SDK packages",
       "minimumReleaseAge": null
     },
     {
       "description": "Internal GitHub Actions: no cooldown, grouped",
-      "matchPackagePrefixes": ["midnightntwrk/"],
+      "matchPackageNames": ["midnightntwrk/**"],
       "matchManagers": ["github-actions"],
       "groupName": "midnight GitHub Actions",
       "minimumReleaseAge": null
@@ -56,10 +56,10 @@
       "rangeStrategy": "replace"
     },
     {
-      "description": "Group minor+patch by ecosystem to reduce PR noise",
+      "description": "Group minor+patch updates to reduce PR noise",
       "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "non-major dependencies ({{manager}})",
-      "groupSlug": "non-major-{{manager}}"
+      "groupName": "non-major dependencies",
+      "groupSlug": "non-major-deps"
     },
     {
       "description": "Lock file maintenance: monthly, no cooldown",
