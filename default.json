@@ -33,7 +33,7 @@
   "packageRules": [
     {
       "description": "Internal packages: no cooldown, grouped into a single PR",
-      "matchPackageNames": ["@midnight-ntwrk/**"],
+      "matchPackageNames": ["@midnight-ntwrk/**", "@midnightntwrk/**"],
       "groupName": "midnight SDK packages",
       "minimumReleaseAge": null
     },
@@ -66,6 +66,18 @@
       "matchUpdateTypes": ["lockFileMaintenance"],
       "schedule": ["before 7am on the first day of the month"],
       "minimumReleaseAge": null
+    }
+  ],
+
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Bump exact-version npm global-install pins in workflow run: blocks",
+      "managerFilePatterns": ["/\\.github/workflows/.*\\.ya?ml$/"],
+      "matchStrings": [
+        "npm (?:install|i|add)\\s+(?:-g|--global)\\s+(?<depName>(?:@[a-z0-9~-][a-z0-9._~-]*/)?[a-z0-9~-][a-z0-9._~-]*)@(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+      ],
+      "datasourceTemplate": "npm"
     }
   ]
 }
