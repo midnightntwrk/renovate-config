@@ -8,7 +8,7 @@ Org-wide hardened [Renovate](https://docs.renovatebot.com/) preset for `midnight
 
 Supply-chain hardened defaults applied to every repo in the org:
 
-- **7-day cooldown** (`minimumReleaseAge`) on all third-party dependencies — blocks the majority of supply chain attacks
+- **14-day cooldown** (`minimumReleaseAge`) on all third-party dependencies — blocks the majority of supply chain attacks
 - **`internalChecksFilter: strict`** — enforces the cooldown (without this it's cosmetic only)
 - **`constraintsFiltering: strict`** — blocks upgrades incompatible with declared runtime versions
 - **OSV vulnerability scanning** enabled; security patches bypass cooldown and schedule
@@ -20,7 +20,12 @@ Supply-chain hardened defaults applied to every repo in the org:
 
 ### `earthfile.json` (Earthfile repos only)
 
-Adds a custom regex manager to track version `ARG`/`ENV` variables annotated with `# renovate:` comments in Earthfiles.
+- **`ARG`/`ENV` version pins** annotated with a `# renovate:` comment, via a custom regex manager
+- **Base images** — Earthly's `FROM` syntax is Dockerfile-compatible, so the native `dockerfile` manager tracks the tag *and* the digest. Earthly-only forms (`FROM +target`, `COPY +target/artifact`) are simply not matched
+
+Renovate cannot recompute a `sha256` literal sitting next to a version `ARG`, so
+a repo that hash-pins its downloads will get a PR that fails at `sha256sum -c`
+until the hashes are refreshed. That is the repo's job, not the preset's.
 
 ## Usage
 
