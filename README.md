@@ -8,7 +8,7 @@ Org-wide hardened [Renovate](https://docs.renovatebot.com/) preset for `midnight
 
 Supply-chain hardened defaults applied to every repo in the org:
 
-- **7-day cooldown** (`minimumReleaseAge`) on all third-party dependencies — blocks the majority of supply chain attacks
+- **14-day cooldown** (`minimumReleaseAge`) on all third-party dependencies — blocks the majority of supply chain attacks
 - **`internalChecksFilter: strict`** — enforces the cooldown (without this it's cosmetic only)
 - **`constraintsFiltering: strict`** — blocks upgrades incompatible with declared runtime versions
 - **OSV vulnerability scanning** enabled; security patches bypass cooldown and schedule
@@ -17,10 +17,21 @@ Supply-chain hardened defaults applied to every repo in the org:
 - **Weekly schedule** (Monday before 7am UK) with rate limits (2 PRs/hour, 5 concurrent)
 - **`@midnight-ntwrk/*`** packages grouped and trusted (no cooldown)
 - **Cargo `rangeStrategy: replace`** — preserves semver ranges in `Cargo.toml` (lock file handles pinning)
+- **Exact-version `npm install -g` pins** in workflow `run:` blocks, so a pinned CLI (e.g. `npm@12.0.2`) stays bumpable instead of rotting
 
 ### `earthfile.json` (Earthfile repos only)
 
-Adds a custom regex manager to track version `ARG`/`ENV` variables annotated with `# renovate:` comments in Earthfiles.
+- **`ARG`/`ENV` version pins** annotated with a `# renovate:` comment, via a custom regex manager
+- **Base images** — Earthly's `FROM` syntax is Dockerfile-compatible, so the native `dockerfile` manager tracks the tag *and* the digest. Earthly-only forms (`FROM +target`, `COPY +target/artifact`) are simply not matched
+- **Exact-version `npm install -g` pins** in `RUN` lines, the Earthfile counterpart of the workflow manager above
+
+Both npm managers match **one global install per line**, and only a full `x.y.z`
+version. `npm i -g a@1.0.0 b@2.0.0` tracks `a` and silently leaves `b` behind, so
+keep them on separate lines.
+
+Renovate cannot recompute a `sha256` literal sitting next to a version `ARG`, so
+a repo that hash-pins its downloads will get a PR that fails at `sha256sum -c`
+until the hashes are refreshed. That is the repo's job, not the preset's.
 
 ## Usage
 

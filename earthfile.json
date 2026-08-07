@@ -6,15 +6,15 @@
     {
       "customType": "regex",
       "description": "Update _version ARGs and ENVs in Earthfile",
-      "managerFilePatterns": ["//^Earthfile$//"],
+      "managerFilePatterns": ["/(^|/)Earthfile$/"],
       "matchStrings": [
-        "#\\s*renovate:\\s*datasource=(?<datasource>[a-z-]+?)(?:\\s+depName=(?<depName>.+?))?\\s+packageName=(?<packageName>.+?)(?:\\s+versioning=(?<versioning>[a-z-]+?))?\\s+(?:ENV|ARG)\\s+.+?(_VERSION|_VER|_version)=(?<currentValue>.+?)(?:\\s|$)"
+        "#\\s*renovate:\\s*datasource=(?<datasource>[a-z-]+?)(?:\\s+depName=(?<depName>.+?))?\\s+packageName=(?<packageName>.+?)(?:\\s+versioning=(?<versioning>[a-z-]+?))?\\s+(?:ENV|ARG)\\s+.+?(?:_VERSION|_VER|_version)=[\"']?(?<currentValue>[^\"'\\s]+)"
       ]
     },
     {
       "customType": "regex",
-      "description": "Bump exact-version npm global-install pins in Earthfiles",
-      "managerFilePatterns": ["//^Earthfile$//"],
+      "description": "Bump exact-version npm global-install pins in Earthfiles. One global install per RUN line: only the first package on a line is matched.",
+      "managerFilePatterns": ["/(^|/)Earthfile$/"],
       "matchStrings": [
         "npm (?:install|i|add)\\s+(?:-g|--global)\\s+(?<depName>(?:@[a-z0-9~-][a-z0-9._~-]*/)?[a-z0-9~-][a-z0-9._~-]*)@(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
       ],
@@ -22,6 +22,10 @@
     }
   ],
   "dockerfile": {
-    "managerFilePatterns": ["//Earthfile//"]
+    "managerFilePatterns": [
+      "/(^|/)Earthfile$/",
+      "/(^|/|\\.)([Dd]ocker|[Cc]ontainer)file$/",
+      "/(^|/)([Dd]ocker|[Cc]ontainer)file[^/]*$/"
+    ]
   }
 }
