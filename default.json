@@ -9,7 +9,7 @@
   ],
 
   "dependencyDashboard": true,
-  "labels": ["renovate"],
+  "labels": ["bot:renovate"],
 
   "schedule": ["before 7am on Monday"],
   "timezone": "Europe/London",
@@ -26,7 +26,7 @@
     "enabled": true,
     "minimumReleaseAge": null,
     "schedule": ["at any time"],
-    "labels": ["renovate", "security"],
+    "labels": ["bot:renovate", "security"],
     "prPriority": 10
   },
 
@@ -48,7 +48,7 @@
       "description": "Major updates require manual approval via dashboard",
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true,
-      "labels": ["renovate", "major"]
+      "labels": ["bot:renovate", "major"]
     },
     {
       "description": "Cargo: replace range (lock file provides pinning)",
