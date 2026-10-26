@@ -32,12 +32,6 @@
 
   "packageRules": [
     {
-      "description": "Internal packages: no cooldown, grouped into a single PR",
-      "matchPackageNames": ["@midnight-ntwrk/**", "@midnightntwrk/**"],
-      "groupName": "midnight SDK packages",
-      "minimumReleaseAge": null
-    },
-    {
       "description": "Internal GitHub Actions: no cooldown, grouped",
       "matchPackageNames": ["midnightntwrk/**"],
       "matchManagers": ["github-actions"],
@@ -60,6 +54,15 @@
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "non-major dependencies",
       "groupSlug": "non-major-deps"
+    },
+    {
+      "description": "First-party JS packages are never bumped automatically. Moving the SDK is a coordinated toolchain decision, not something a bot should decide on a Monday morning, so these are detected and listed on the dependency dashboard and only become a PR once someone ticks the box. This rule sits after the minor+patch grouping deliberately: later rules win, so it reclaims groupName and keeps first-party updates on their own branch instead of being folded in with third-party ones. No cooldown, because by the time anyone approves one, a human has already judged it. Container images and GitHub Actions under midnightntwrk/ are not covered here.",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["@midnight-ntwrk/**", "@midnightntwrk/**"],
+      "groupName": "midnight SDK packages",
+      "groupSlug": "midnight-sdk",
+      "minimumReleaseAge": null,
+      "dependencyDashboardApproval": true
     },
     {
       "description": "Lock file maintenance: monthly, no cooldown",
